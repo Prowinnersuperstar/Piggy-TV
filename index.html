@@ -1,128 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pag Pag TV</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      position: relative;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #ff0000;
-      padding: 10px 20px;
-    }
-    header img {
-      height: 80px;
-      margin-right: 20px;
-    }
-    header h1 {
-      color: white;
-      margin: 0;
-      font-size: 2em;
-    }
-    /* Subscribe button styling */
-    #subscribeBtn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      border-radius: 25px; /* rounded */
-      background-color: #007bff; /* blue */
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1em;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: background-color 0.3s;
-      display: block;
-      width: fit-content;
-    }
-    #subscribeBtn:hover {
-      background-color: #0069d9;
-    }
-    /* Subscriber count below the button */
-    #subCount {
-      position: absolute;
-      top: 60px; /* adjust as needed below button */
-      right: 20px;
-      font-size: 1.2em;
-      color: #333;
-      background: transparent;
-    }
-    main {
-      padding: 20px;
-      margin-top: 80px; /* slightly less to move up */
-      text-align: center;
-    }
-    .welcome {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pag Pag TV</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ff0000;
+    padding: 10px;
+  }
+  header img {
+    height: 60px;
+    margin-right: 10px;
+  }
+  header h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.5em;
+  }
+  /* Subscribe button styling */
+  #subscribeBtn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    border-radius: 25px; /* rounded */
+    background-color: #007bff; /* blue */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
+    z-index: 10;
+  }
+  #subscribeBtn:hover {
+    background-color: #0069d9;
+  }
+  /* Subscriber count below the button */
+  #subCount {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    font-size: 1.2em;
+    color: #333;
+    background: transparent;
+    z-index: 10;
+  }
+  main {
+    padding: 20px;
+    margin-top: 100px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  .welcome {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  /* Responsive iframe for videos */
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <img src="https://plain-apac-prod-public.komododecks.com/202605/04/pNxPzHWuSkiTSfjvCfpz/image.png" alt="Pag Pag TV Logo" />
-    <h1>Pag Pag TV</h1>
-  </header>
-  
-  <!-- Subscribe button -->
-  <button id="subscribeBtn">Subscribe</button>
-  <!-- Subscriber count -->
-  <div id="subCount">Subscribers: 0</div>
-  
-  <main>
-    <div class="welcome">
-      Welcome to Pag Pag TV!
-    </div>
-  </main>
+<header>
+  <img src="https://plain-apac-prod-public.komododecks.com/202605/04/pNxPzHWuSkiTSfjvCfpz/image.png" alt="Pag Pag TV Logo" />
+  <h1>Pag Pag TV</h1>
+</header>
 
-  <script>
-    // Initialize shared subscriber count
-    if (localStorage.getItem('sharedSubCount') === null) {
-      localStorage.setItem('sharedSubCount', '0');
+<!-- Subscribe button fixed top right -->
+<button id="subscribeBtn">Subscribe</button>
+<!-- Subscriber count -->
+<div id="subCount">Subscribers: 0</div>
+
+<main>
+  <div class="welcome">Welcome to Pag Pag TV!</div>
+  <!-- Embedded video with responsive container -->
+  <div class="video-container">
+    <iframe src="https://streamable.com/e/erlwfl" frameborder="0" allowfullscreen></iframe>
+  </div>
+</main>
+
+<script>
+  // For demonstration, using localStorage for now
+  // To make it truly shared, connect to a backend like Firebase here
+
+  // Initialize shared subscriber count in local storage if not set
+  if (localStorage.getItem('sharedSubCount') === null) {
+    localStorage.setItem('sharedSubCount', '0');
+  }
+
+  // User subscription state
+  const userSubKey = 'userSubscribed';
+  let isSubscribed = localStorage.getItem(userSubKey) === 'true';
+
+  const subCountDiv = document.getElementById('subCount');
+  const btn = document.getElementById('subscribeBtn');
+
+  function updateDisplay() {
+    let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
+    subCountDiv.textContent = 'Subscribers: ' + count;
+    btn.textContent = isSubscribed ? 'Unsubscribe' : 'Subscribe';
+  }
+
+  // Load initial display
+  updateDisplay();
+
+  document.getElementById('subscribeBtn').addEventListener('click', function() {
+    let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
+    if (isSubscribed) {
+      count = Math.max(0, count - 1);
+      localStorage.setItem('sharedSubCount', count.toString());
+      localStorage.setItem(userSubKey, 'false');
+      isSubscribed = false;
+    } else {
+      count += 1;
+      localStorage.setItem('sharedSubCount', count.toString());
+      localStorage.setItem(userSubKey, 'true');
+      isSubscribed = true;
     }
-
-    // User subscription state
-    const userSubKey = 'userSubscribed';
-    let isSubscribed = localStorage.getItem(userSubKey) === 'true';
-
-    const subCountDiv = document.getElementById('subCount');
-    const btn = document.getElementById('subscribeBtn');
-
-    function updateDisplay() {
-      let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
-      subCountDiv.textContent = 'Subscribers: ' + count;
-      btn.textContent = isSubscribed ? 'Unsubscribe' : 'Subscribe';
-    }
-
-    // Load initial display
     updateDisplay();
-
-    document.getElementById('subscribeBtn').addEventListener('click', function() {
-      let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
-      if (isSubscribed) {
-        // Unsubscribe
-        count = Math.max(0, count - 1);
-        localStorage.setItem('sharedSubCount', count.toString());
-        localStorage.setItem(userSubKey, 'false');
-        isSubscribed = false;
-      } else {
-        // Subscribe
-        count += 1;
-        localStorage.setItem('sharedSubCount', count.toString());
-        localStorage.setItem(userSubKey, 'true');
-        isSubscribed = true;
-      }
-      updateDisplay();
-    });
-  </script>
+  });
+</script>
 </body>
 </html>
