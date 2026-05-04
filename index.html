@@ -8,10 +8,13 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      position: relative;
     }
     header {
       display: flex;
       align-items: center;
+      justify-content: center;
       background-color: #ff0000;
       padding: 10px 20px;
     }
@@ -24,19 +27,43 @@
       margin: 0;
       font-size: 2em;
     }
+    /* Subscribe button styling */
+    #subscribeBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      border-radius: 25px; /* rounded */
+      background-color: #007bff; /* blue */
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s;
+      display: block;
+      width: fit-content;
+    }
+    #subscribeBtn:hover {
+      background-color: #0069d9;
+    }
+    /* Subscriber count below the button */
+    #subCount {
+      position: absolute;
+      top: 60px; /* adjust as needed below button */
+      right: 20px;
+      font-size: 1.2em;
+      color: #333;
+      background: transparent;
+    }
     main {
       padding: 20px;
+      margin-top: 80px; /* slightly less to move up */
+      text-align: center;
     }
     .welcome {
-      text-align: center;
       font-size: 1.5em;
       margin-bottom: 20px;
-    }
-    /* Add styles for the new section here if needed */
-    .content-section {
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
     }
   </style>
 </head>
@@ -45,14 +72,57 @@
     <img src="https://plain-apac-prod-public.komododecks.com/202605/04/pNxPzHWuSkiTSfjvCfpz/image.png" alt="Pag Pag TV Logo" />
     <h1>Pag Pag TV</h1>
   </header>
+  
+  <!-- Subscribe button -->
+  <button id="subscribeBtn">Subscribe</button>
+  <!-- Subscriber count -->
+  <div id="subCount">Subscribers: 0</div>
+  
   <main>
     <div class="welcome">
       Welcome to Pag Pag TV!
     </div>
-    <div class="content-section">
-      <!-- Future content like upcoming shows or announcements -->
-      <p>Stay tuned for upcoming content!</p>
-    </div>
   </main>
+
+  <script>
+    // Initialize shared subscriber count
+    if (localStorage.getItem('sharedSubCount') === null) {
+      localStorage.setItem('sharedSubCount', '0');
+    }
+
+    // User subscription state
+    const userSubKey = 'userSubscribed';
+    let isSubscribed = localStorage.getItem(userSubKey) === 'true';
+
+    const subCountDiv = document.getElementById('subCount');
+    const btn = document.getElementById('subscribeBtn');
+
+    function updateDisplay() {
+      let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
+      subCountDiv.textContent = 'Subscribers: ' + count;
+      btn.textContent = isSubscribed ? 'Unsubscribe' : 'Subscribe';
+    }
+
+    // Load initial display
+    updateDisplay();
+
+    document.getElementById('subscribeBtn').addEventListener('click', function() {
+      let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
+      if (isSubscribed) {
+        // Unsubscribe
+        count = Math.max(0, count - 1);
+        localStorage.setItem('sharedSubCount', count.toString());
+        localStorage.setItem(userSubKey, 'false');
+        isSubscribed = false;
+      } else {
+        // Subscribe
+        count += 1;
+        localStorage.setItem('sharedSubCount', count.toString());
+        localStorage.setItem(userSubKey, 'true');
+        isSubscribed = true;
+      }
+      updateDisplay();
+    });
+  </script>
 </body>
 </html>
