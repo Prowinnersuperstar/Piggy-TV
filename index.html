@@ -26,35 +26,9 @@
     margin: 0;
     font-size: 1.5em;
   }
-  /* Subscribe button styling */
-  #subscribeBtn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    padding: 10px 20px;
-    border-radius: 25px; /* rounded */
-    background-color: #007bff; /* blue */
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 1em;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: background-color 0.3s;
-    z-index: 10;
-  }
-  #subscribeBtn:hover {
-    background-color: #0069d9;
-  }
-  /* Subscriber count below the button */
-  #subCount {
-    position: fixed;
-    top: 60px;
-    right: 10px;
-    font-size: 1.2em;
-    color: #333;
-    background: transparent;
-    z-index: 10;
-  }
+  /* Subscribe button styling - removed */
+  /* #subscribeBtn styles removed */
+  /* #subCount styles removed */
   main {
     padding: 20px;
     margin-top: 100px;
@@ -89,10 +63,7 @@
   <h1>Pag Pag TV</h1>
 </header>
 
-<!-- Subscribe button fixed top right -->
-<button id="subscribeBtn">Subscribe</button>
-<!-- Subscriber count -->
-<div id="subCount">Subscribers: 0</div>
+<!-- Subscribe button and subscriber count removed -->
 
 <main>
   <div class="welcome">Welcome to Pag Pag TV!</div>
@@ -103,45 +74,8 @@
 </main>
 
 <script>
-  // For demonstration, using localStorage for now
-  // To make it truly shared, connect to a backend like Firebase here
-
-  // Initialize shared subscriber count in local storage if not set
-  if (localStorage.getItem('sharedSubCount') === null) {
-    localStorage.setItem('sharedSubCount', '0');
-  }
-
-  // User subscription state
-  const userSubKey = 'userSubscribed';
-  let isSubscribed = localStorage.getItem(userSubKey) === 'true';
-
-  const subCountDiv = document.getElementById('subCount');
-  const btn = document.getElementById('subscribeBtn');
-
-  function updateDisplay() {
-    let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
-    subCountDiv.textContent = 'Subscribers: ' + count;
-    btn.textContent = isSubscribed ? 'Unsubscribe' : 'Subscribe';
-  }
-
-  // Load initial display
-  updateDisplay();
-
-  document.getElementById('subscribeBtn').addEventListener('click', function() {
-    let count = parseInt(localStorage.getItem('sharedSubCount'), 10);
-    if (isSubscribed) {
-      count = Math.max(0, count - 1);
-      localStorage.setItem('sharedSubCount', count.toString());
-      localStorage.setItem(userSubKey, 'false');
-      isSubscribed = false;
-    } else {
-      count += 1;
-      localStorage.setItem('sharedSubCount', count.toString());
-      localStorage.setItem(userSubKey, 'true');
-      isSubscribed = true;
-    }
-    updateDisplay();
-  });
+  // Removed all subscription-related scripts
+  // No subscription logic needed now
 </script>
 </body>
 </html>
