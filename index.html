@@ -2,698 +2,1527 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Game Hub</title>
 
-    <style>
-        :root {
-            --bg: #f4f5f7;
-            --sidebar: #ffffff;
-            --card: #ffffff;
-            --text: #17181a;
-            --secondary: #666b73;
-            --border: #e2e4e8;
-            --accent: #5865f2;
-            --accent-hover: #4752c4;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        * {
-            box-sizing: border-box;
-        }
+<title>My Game Hub</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            transition: background 0.25s, color 0.25s;
-        }
+<style>
 
-        /* SIDEBAR */
+/* =========================================================
+   COLORS
+========================================================= */
 
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 240px;
-            height: 100vh;
-            background: var(--sidebar);
-            border-right: 1px solid var(--border);
-            padding: 20px;
-            transition: background 0.25s;
-            z-index: 10;
-        }
+:root {
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
+    --background: #f3f4f6;
 
-        .nav-title {
-            font-size: 12px;
-            color: var(--secondary);
-            text-transform: uppercase;
-            margin: 20px 10px 8px;
-            font-weight: bold;
-        }
+    --sidebar: #ffffff;
 
-        .nav-button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 5px;
-            border: none;
-            border-radius: 8px;
-            background: transparent;
-            color: var(--text);
-            text-align: left;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+    --card: #ffffff;
 
-        .nav-button:hover {
-            background: var(--bg);
-        }
+    --text: #17181a;
 
-        .nav-button.active {
-            background: var(--accent);
-            color: white;
-        }
+    --secondary: #666b73;
 
-        /* MAIN CONTENT */
+    --border: #dddddd;
 
-        .main {
-            margin-left: 240px;
-            padding: 30px;
-            min-height: 100vh;
-        }
+    --accent: #5865f2;
 
-        .hosted-by {
-            display: inline-block;
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 8px 14px;
-            border-radius: 20px;
-            color: var(--secondary);
-            font-size: 13px;
-            margin-bottom: 25px;
-        }
+    --accent-hover: #4752c4;
 
-        .hosted-by strong {
-            color: var(--text);
-        }
+}
 
-        h1 {
-            margin-top: 0;
-            font-size: 34px;
-        }
 
-        .subtitle {
-            color: var(--secondary);
-            margin-top: -15px;
-            margin-bottom: 30px;
-        }
+/* =========================================================
+   GENERAL
+========================================================= */
 
-        /* GAME GRID */
+* {
+    box-sizing: border-box;
+}
 
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
 
-        .game-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 22px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+body {
 
-        .game-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        }
+    margin: 0;
 
-        .game-card h2 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-        .game-card p {
-            color: var(--secondary);
-            line-height: 1.5;
-            min-height: 65px;
-        }
+    background: var(--background);
 
-        .play-button {
-            display: block;
-            width: 100%;
-            padding: 11px;
-            border: none;
-            border-radius: 8px;
-            background: var(--accent);
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+    color: var(--text);
 
-        .play-button:hover {
-            background: var(--accent-hover);
-        }
+    transition:
+        background 0.25s,
+        color 0.25s;
 
-        /* SETTINGS */
+}
 
-        .settings {
-            max-width: 700px;
-        }
 
-        .setting-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
+/* =========================================================
+   SIDEBAR
+========================================================= */
 
-        .setting-card h3 {
-            margin-top: 0;
-        }
+.sidebar {
 
-        .setting-card p {
-            color: var(--secondary);
-        }
+    position: fixed;
 
-        .setting-button {
-            padding: 10px 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--card);
-            color: var(--text);
-            cursor: pointer;
-            margin-right: 8px;
-        }
+    left: 0;
 
-        .setting-button:hover {
-            background: var(--bg);
-        }
+    top: 0;
 
-        .setting-button.selected {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
+    width: 240px;
 
-        /* MOBILE */
+    height: 100vh;
 
-        @media (max-width: 700px) {
-            .sidebar {
-                width: 190px;
-            }
+    background: var(--sidebar);
 
-            .main {
-                margin-left: 190px;
-                padding: 20px;
-            }
-        }
+    border-right:
+        1px solid var(--border);
 
-        @media (max-width: 500px) {
-            .sidebar {
-                width: 70px;
-                padding: 10px;
-            }
+    padding: 20px;
 
-            .logo {
-                font-size: 0;
-                text-align: center;
-            }
+    z-index: 10;
 
-            .logo::after {
-                content: "🎮";
-                font-size: 24px;
-            }
+    transition:
+        background 0.25s;
 
-            .nav-title {
-                display: none;
-            }
+}
 
-            .nav-button {
-                text-align: center;
-                font-size: 0;
-            }
 
-            .nav-button:first-of-type::after {
-                content: "🎮";
-                font-size: 20px;
-            }
+.logo {
 
-            .nav-button:last-of-type::after {
-                content: "⚙️";
-                font-size: 20px;
-            }
+    font-size: 22px;
 
-            .main {
-                margin-left: 70px;
-                padding: 15px;
-            }
-        }
-    </style>
+    font-weight: bold;
+
+    margin-bottom: 30px;
+
+}
+
+
+.nav-title {
+
+    font-size: 12px;
+
+    color: var(--secondary);
+
+    text-transform: uppercase;
+
+    margin:
+        20px 10px 8px;
+
+    font-weight: bold;
+
+}
+
+
+.nav-button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 5px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    text-align: left;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+.nav-button:hover {
+
+    background: var(--background);
+
+}
+
+
+.nav-button.active {
+
+    background: var(--accent);
+
+    color: white;
+
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main {
+
+    margin-left: 240px;
+
+    padding: 30px;
+
+    min-height: 100vh;
+
+}
+
+
+/* =========================================================
+   HOSTED BY
+========================================================= */
+
+.hosted-by {
+
+    display: inline-block;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    padding:
+        8px 14px;
+
+    border-radius: 20px;
+
+    color: var(--secondary);
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.hosted-by strong {
+
+    color: var(--text);
+
+}
+
+
+/* =========================================================
+   TITLES
+========================================================= */
+
+h1 {
+
+    margin-top: 0;
+
+    font-size: 34px;
+
+}
+
+
+.subtitle {
+
+    color: var(--secondary);
+
+    margin-top: -15px;
+
+    margin-bottom: 30px;
+
+}
+
+
+/* =========================================================
+   GAME GRID
+========================================================= */
+
+.games-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+        );
+
+    gap: 20px;
+
+}
+
+
+/* =========================================================
+   GAME CARD
+========================================================= */
+
+.game-card {
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+
+}
+
+
+.game-card:hover {
+
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.08);
+
+}
+
+
+/* =========================================================
+   THUMBNAIL
+========================================================= */
+
+.game-thumbnail {
+
+    width: 100%;
+
+    height: 170px;
+
+    object-fit: cover;
+
+    display: block;
+
+    background: #222;
+
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.game-content {
+
+    padding: 20px;
+
+}
+
+
+.game-card h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 10px;
+
+    font-size: 21px;
+
+}
+
+
+.game-card p {
+
+    color: var(--secondary);
+
+    line-height: 1.5;
+
+    min-height: 65px;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* =========================================================
+   PLAY BUTTON
+========================================================= */
+
+.play-button {
+
+    display: block;
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: var(--accent);
+
+    color: white;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+.play-button:hover {
+
+    background:
+        var(--accent-hover);
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings {
+
+    max-width: 700px;
+
+}
+
+
+.setting-card {
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.setting-card h3 {
+
+    margin-top: 0;
+
+}
+
+
+.setting-card p {
+
+    color: var(--secondary);
+
+}
+
+
+.setting-button {
+
+    padding:
+        10px 15px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    margin-right: 8px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.setting-button:hover {
+
+    background: var(--background);
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .sidebar {
+
+        width: 190px;
+
+    }
+
+
+    .main {
+
+        margin-left: 190px;
+
+        padding: 20px;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .sidebar {
+
+        width: 70px;
+
+        padding: 10px;
+
+    }
+
+
+    .logo {
+
+        font-size: 0;
+
+        text-align: center;
+
+    }
+
+
+    .logo::after {
+
+        content: "🎮";
+
+        font-size: 24px;
+
+    }
+
+
+    .nav-title {
+
+        display: none;
+
+    }
+
+
+    .nav-button {
+
+        text-align: center;
+
+        font-size: 0;
+
+    }
+
+
+    .nav-button.games-button::after {
+
+        content: "🎮";
+
+        font-size: 20px;
+
+    }
+
+
+    .nav-button.settings-button::after {
+
+        content: "⚙️";
+
+        font-size: 20px;
+
+    }
+
+
+    .main {
+
+        margin-left: 70px;
+
+        padding: 15px;
+
+    }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-    <!-- =========================
-         SIDEBAR
-         ========================= -->
 
-    <aside class="sidebar">
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-        <div class="logo">
-            My Game Hub
-        </div>
-
-        <div class="nav-title">
-            Navigation
-        </div>
-
-        <button class="nav-button active" onclick="showPage('games', this)">
-            🎮 Games
-        </button>
-
-        <button class="nav-button" onclick="showPage('settings', this)">
-            ⚙️ Settings
-        </button>
-
-    </aside>
+<aside class="sidebar">
 
 
-    <!-- =========================
-         MAIN AREA
-         ========================= -->
+    <div class="logo">
 
-    <main class="main">
+        My Game Hub
 
-        <!-- HOSTED BY -->
-        <div class="hosted-by">
-            Hosted by <strong id="hostName">GitHub Pages</strong>
-        </div>
+    </div>
 
 
-        <!-- =========================
-             GAMES PAGE
-             ========================= -->
+    <div class="nav-title">
 
-        <section id="gamesPage">
+        Navigation
 
-            <h1>My Games</h1>
+    </div>
 
-            <p class="subtitle">
-                Choose a game to start playing.
-            </p>
 
-            <div class="games-grid" id="gamesGrid">
-                <!-- Games are automatically inserted here -->
+    <button
+        class="nav-button games-button active"
+        onclick="showPage('games', this)"
+    >
+
+        🎮 Games
+
+    </button>
+
+
+    <button
+        class="nav-button settings-button"
+        onclick="showPage('settings', this)"
+    >
+
+        ⚙️ Settings
+
+    </button>
+
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- HOSTED BY -->
+
+    <div class="hosted-by">
+
+        Hosted by
+
+        <strong id="hostName">
+
+            GitHub Pages
+
+        </strong>
+
+    </div>
+
+
+
+    <!-- =================================================
+         GAMES PAGE
+    ================================================= -->
+
+    <section id="gamesPage">
+
+
+        <h1>
+
+            My Games
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            Choose a game to start playing.
+
+        </p>
+
+
+        <div
+            class="games-grid"
+            id="gamesGrid"
+        ></div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         SETTINGS PAGE
+    ================================================= -->
+
+    <section
+        id="settingsPage"
+        style="display: none;"
+    >
+
+
+        <h1>
+
+            Settings
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            Customize your game hub.
+
+        </p>
+
+
+
+        <div class="settings">
+
+
+            <!-- APPEARANCE -->
+
+            <div class="setting-card">
+
+
+                <h3>
+
+                    Appearance
+
+                </h3>
+
+
+                <p>
+
+                    Choose between light and dark mode.
+
+                </p>
+
+
+                <button
+                    class="setting-button"
+                    onclick="setTheme('light')"
+                >
+
+                    ☀️ Light Mode
+
+                </button>
+
+
+                <button
+                    class="setting-button"
+                    onclick="setTheme('dark')"
+                >
+
+                    🌙 Dark Mode
+
+                </button>
+
+
             </div>
 
-        </section>
 
 
-        <!-- =========================
-             SETTINGS PAGE
-             ========================= -->
+            <!-- ACCENT COLOR -->
 
-        <section id="settingsPage" style="display:none;">
-
-            <h1>Settings</h1>
-
-            <p class="subtitle">
-                Customize your game hub.
-            </p>
-
-            <div class="settings">
-
-                <!-- THEME -->
-
-                <div class="setting-card">
-
-                    <h3>Appearance</h3>
-
-                    <p>
-                        Choose how the website looks.
-                    </p>
-
-                    <button
-                        class="setting-button"
-                        id="lightButton"
-                        onclick="setTheme('light')">
-                        ☀️ Light Mode
-                    </button>
-
-                    <button
-                        class="setting-button"
-                        id="darkButton"
-                        onclick="setTheme('dark')">
-                        🌙 Dark Mode
-                    </button>
-
-                </div>
+            <div class="setting-card">
 
 
-                <!-- ACCENT COLOR -->
+                <h3>
 
-                <div class="setting-card">
+                    Accent Color
 
-                    <h3>Accent Color</h3>
-
-                    <p>
-                        Change the main color used by the website.
-                    </p>
-
-                    <button class="setting-button" onclick="setAccent('#5865f2')">
-                        Blue
-                    </button>
-
-                    <button class="setting-button" onclick="setAccent('#ff4757')">
-                        Red
-                    </button>
-
-                    <button class="setting-button" onclick="setAccent('#2ed573')">
-                        Green
-                    </button>
-
-                    <button class="setting-button" onclick="setAccent('#ffa502')">
-                        Orange
-                    </button>
-
-                    <button class="setting-button" onclick="setAccent('#a55eea')">
-                        Purple
-                    </button>
-
-                </div>
+                </h3>
 
 
-                <!-- RESET -->
+                <p>
 
-                <div class="setting-card">
+                    Change the main color of the website.
 
-                    <h3>Reset Settings</h3>
+                </p>
 
-                    <p>
-                        Reset all customization settings to their defaults.
-                    </p>
 
-                    <button class="setting-button" onclick="resetSettings()">
-                        Reset Settings
-                    </button>
+                <button
+                    class="setting-button"
+                    onclick="setAccent('#5865f2')"
+                >
 
-                </div>
+                    Blue
+
+                </button>
+
+
+                <button
+                    class="setting-button"
+                    onclick="setAccent('#ff4757')"
+                >
+
+                    Red
+
+                </button>
+
+
+                <button
+                    class="setting-button"
+                    onclick="setAccent('#2ed573')"
+                >
+
+                    Green
+
+                </button>
+
+
+                <button
+                    class="setting-button"
+                    onclick="setAccent('#ffa502')"
+                >
+
+                    Orange
+
+                </button>
+
+
+                <button
+                    class="setting-button"
+                    onclick="setAccent('#a55eea')"
+                >
+
+                    Purple
+
+                </button>
+
 
             </div>
 
-        </section>
-
-    </main>
 
 
-    <script>
+            <!-- MORE CUSTOMIZATION -->
 
-        /* =====================================================
-           ADD YOUR GAMES HERE
-           
-           To add another game, simply copy one of these:
-
-           {
-               title: "Game Name",
-               description: "Description of the game.",
-               link: "https://example.com"
-           }
-
-           ===================================================== */
-
-        const games = [
-
-            {
-                title: "Cube Battle",
-                description: "A chaotic game where cubes battle each other.",
-                link: "https://prowinnersuperstar.github.io/Cube-Battle/"
-            },
-
-            {
-                title: "Honey Click",
-                description: "Click honey, buy upgrades, and become the ultimate honey tycoon.",
-                link: "https://prowinnersuperstar.github.io/Honey-Clicker/"
-            },
-
-            /*
-            ADD MORE GAMES BELOW
-
-            {
-                title: "https://prowinnersuperstar.github.io/Faux_AI/",
-                description: "This is my new game!",
-                link: "https://example.com/my-game"
-            },
-
-            */
-
-        ];
+            <div class="setting-card">
 
 
-        /* =====================================================
-           HOST INFORMATION
-           
-           Change this to whatever you want displayed.
-           ===================================================== */
+                <h3>
 
-        const hostedBy = "GitHub Pages";
+                    Other Customization
+
+                </h3>
 
 
-        /* =====================================================
-           LOAD GAMES
-           ===================================================== */
+                <p>
 
-        function loadGames() {
+                    More customization options can be added here.
 
-            const gamesGrid = document.getElementById("gamesGrid");
+                </p>
 
-            gamesGrid.innerHTML = "";
 
-            games.forEach(game => {
+            </div>
 
-                const card = document.createElement("div");
 
-                card.className = "game-card";
 
-                card.innerHTML = `
-                    <h2>${game.title}</h2>
+            <!-- RESET -->
+
+            <div class="setting-card">
+
+
+                <h3>
+
+                    Reset Settings
+
+                </h3>
+
+
+                <p>
+
+                    Restore the default appearance.
+
+                </p>
+
+
+                <button
+                    class="setting-button"
+                    onclick="resetSettings()"
+                >
+
+                    Reset Settings
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+
+/* =========================================================
+   =========================================================
+
+   ADD YOUR GAMES HERE
+
+   EACH GAME NEEDS ONLY 4 LINES:
+
+   TITLE
+   DESCRIPTION
+   THUMBNAIL
+   GAME LINK
+
+   YOU DO NOT NEED:
+
+   { }
+   ,
+   );
+   
+   ========================================================= */
+
+
+const gameList = `
+
+
+Cube Battle
+A chaotic game where cubes battle each other.
+THUMBNAIL_HERE
+https://prowinnersuperstar.github.io/Cube-Battle/
+
+
+Honey Click
+Click honey and become the ultimate honey tycoon.
+THUMBNAIL_HERE
+https://prowinnersuperstar.github.io/Honey-Clicker/
+
+
+Faux AI
+Discover fake AI.
+THUMBNAIL_HERE
+https://prowinnersuperstar.github.io/Faux_AI/
+
+Ringfall Rumble
+Fight to become the alpha animal.
+THUMBNAIL_HERE
+https://playabl.ai/en/@prowinnersuperstar/ringfall-rumble-upd-12-aussie--6a6c6320b5f814272cd9ac4e
+
+`;
+
+
+
+/* =========================================================
+   HOSTED BY
+
+   Change this whenever you want.
+
+   Example:
+
+   GitHub Pages
+   GitHub
+   Prowinnersuperstar
+   GitHub Pages • Prowinnersuperstar
+
+========================================================= */
+
+
+const hostedBy =
+    "GitHub Pages";
+
+
+
+/* =========================================================
+   LOAD GAMES
+========================================================= */
+
+function loadGames() {
+
+
+    const grid =
+        document.getElementById(
+            "gamesGrid"
+        );
+
+
+    const lines =
+        gameList
+            .trim()
+            .split("\n")
+            .map(
+                line => line.trim()
+            );
+
+
+    let games = [];
+
+
+    /*
+       Every game has 4 lines:
+
+       1. Title
+       2. Description
+       3. Thumbnail
+       4. Game link
+    */
+
+
+    for (
+        let i = 0;
+        i < lines.length;
+        i++
+    ) {
+
+
+        if (
+            lines[i] === ""
+        ) {
+
+            continue;
+
+        }
+
+
+        const title =
+            lines[i];
+
+
+        const description =
+            lines[i + 1];
+
+
+        const thumbnail =
+            lines[i + 2];
+
+
+        const link =
+            lines[i + 3];
+
+
+        if (
+            !title ||
+            !description ||
+            !thumbnail ||
+            !link
+        ) {
+
+            continue;
+
+        }
+
+
+        games.push({
+
+            title:
+                title,
+
+            description:
+                description,
+
+            thumbnail:
+                thumbnail,
+
+            link:
+                link
+
+        });
+
+
+        i += 3;
+
+    }
+
+
+
+    /* =====================================================
+       CREATE GAME CARDS
+    ===================================================== */
+
+
+    games.forEach(
+        game => {
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "game-card";
+
+
+            card.innerHTML = `
+
+                <img
+                    class="game-thumbnail"
+                    src="${escapeAttribute(game.thumbnail)}"
+                    alt="${escapeHTML(game.title)} thumbnail"
+                    onerror="this.style.display='none'"
+                >
+
+
+                <div class="game-content">
+
+
+                    <h2>
+
+                        ${escapeHTML(game.title)}
+
+                    </h2>
+
 
                     <p>
-                        ${game.description}
+
+                        ${escapeHTML(game.description)}
+
                     </p>
+
 
                     <a
                         class="play-button"
-                        href="${game.link}"
+                        href="${escapeAttribute(game.link)}"
                         target="_blank"
-                        rel="noopener noreferrer">
+                        rel="noopener noreferrer"
+                    >
+
                         ▶ Play
+
                     </a>
-                `;
-
-                gamesGrid.appendChild(card);
-
-            });
-
-        }
 
 
-        /* =====================================================
-           PAGE NAVIGATION
-           ===================================================== */
+                </div>
 
-        function showPage(page, button) {
-
-            const gamesPage = document.getElementById("gamesPage");
-            const settingsPage = document.getElementById("settingsPage");
-
-            if (page === "games") {
-
-                gamesPage.style.display = "block";
-                settingsPage.style.display = "none";
-
-            }
-
-            if (page === "settings") {
-
-                gamesPage.style.display = "none";
-                settingsPage.style.display = "block";
-
-            }
-
-            document.querySelectorAll(".nav-button")
-                .forEach(btn => btn.classList.remove("active"));
-
-            button.classList.add("active");
-
-        }
+            `;
 
 
-        /* =====================================================
-           DARK / LIGHT MODE
-           ===================================================== */
-
-        function setTheme(theme) {
-
-            if (theme === "dark") {
-
-                document.documentElement.style.setProperty(
-                    "--bg",
-                    "#111214"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--sidebar",
-                    "#18191c"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--card",
-                    "#1e1f22"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--text",
-                    "#f2f3f5"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--secondary",
-                    "#b5bac1"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--border",
-                    "#303136"
-                );
-
-                localStorage.setItem("theme", "dark");
-
-            } else {
-
-                document.documentElement.style.setProperty(
-                    "--bg",
-                    "#f4f5f7"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--sidebar",
-                    "#ffffff"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--card",
-                    "#ffffff"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--text",
-                    "#17181a"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--secondary",
-                    "#666b73"
-                );
-
-                document.documentElement.style.setProperty(
-                    "--border",
-                    "#e2e4e8"
-                );
-
-                localStorage.setItem("theme", "light");
-
-            }
-
-        }
-
-
-        /* =====================================================
-           ACCENT COLOR
-           ===================================================== */
-
-        function setAccent(color) {
-
-            document.documentElement.style.setProperty(
-                "--accent",
-                color
+            grid.appendChild(
+                card
             );
 
-            localStorage.setItem("accent", color);
 
         }
+    );
+
+}
 
 
-        /* =====================================================
-           RESET
-           ===================================================== */
 
-        function resetSettings() {
+/* =========================================================
+   SECURITY
+========================================================= */
 
-            localStorage.removeItem("theme");
-            localStorage.removeItem("accent");
-
-            setTheme("light");
-            setAccent("#5865f2");
-
-        }
+function escapeHTML(text) {
 
 
-        /* =====================================================
-           LOAD SAVED SETTINGS
-           ===================================================== */
+    return text
 
-        function loadSettings() {
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
 
-            const savedTheme =
-                localStorage.getItem("theme");
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
 
-            const savedAccent =
-                localStorage.getItem("accent");
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
 
-            if (savedTheme) {
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
 
-                setTheme(savedTheme);
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
-            } else {
+}
 
-                setTheme("light");
+
+
+function escapeAttribute(text) {
+
+
+    return text
+
+        .replaceAll(
+            '"',
+            "%22"
+        )
+
+        .replaceAll(
+            "'",
+            "%27"
+        );
+
+}
+
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+function showPage(
+    page,
+    button
+) {
+
+
+    const gamesPage =
+        document.getElementById(
+            "gamesPage"
+        );
+
+
+    const settingsPage =
+        document.getElementById(
+            "settingsPage"
+        );
+
+
+    if (
+        page === "games"
+    ) {
+
+
+        gamesPage.style.display =
+            "block";
+
+
+        settingsPage.style.display =
+            "none";
+
+    }
+
+
+    if (
+        page === "settings"
+    ) {
+
+
+        gamesPage.style.display =
+            "none";
+
+
+        settingsPage.style.display =
+            "block";
+
+    }
+
+
+
+    document
+        .querySelectorAll(
+            ".nav-button"
+        )
+        .forEach(
+            btn => {
+
+                btn.classList.remove(
+                    "active"
+                );
 
             }
-
-            if (savedAccent) {
-
-                setAccent(savedAccent);
-
-            }
-
-        }
+        );
 
 
-        /* =====================================================
-           START WEBSITE
-           ===================================================== */
+    button.classList.add(
+        "active"
+    );
 
-        document.getElementById("hostName").textContent = hostedBy;
+}
 
-        loadGames();
 
-        loadSettings();
 
-    </script>
+/* =========================================================
+   LIGHT / DARK MODE
+========================================================= */
+
+function setTheme(
+    theme
+) {
+
+
+    if (
+        theme === "dark"
+    ) {
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--background",
+                "#111214"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--sidebar",
+                "#18191c"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--card",
+                "#1e1f22"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--text",
+                "#f2f3f5"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--secondary",
+                "#b5bac1"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--border",
+                "#303136"
+            );
+
+
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
+
+    }
+
+
+    else {
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--background",
+                "#f3f4f6"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--sidebar",
+                "#ffffff"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--card",
+                "#ffffff"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--text",
+                "#17181a"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--secondary",
+                "#666b73"
+            );
+
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--border",
+                "#dddddd"
+            );
+
+
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   ACCENT COLOR
+========================================================= */
+
+function setAccent(
+    color
+) {
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--accent",
+            color
+        );
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--accent-hover",
+            color
+        );
+
+
+    localStorage.setItem(
+        "accent",
+        color
+    );
+
+}
+
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetSettings() {
+
+
+    localStorage.removeItem(
+        "theme"
+    );
+
+
+    localStorage.removeItem(
+        "accent"
+    );
+
+
+    setTheme(
+        "light"
+    );
+
+
+    setAccent(
+        "#5865f2"
+    );
+
+}
+
+
+
+/* =========================================================
+   LOAD SAVED SETTINGS
+========================================================= */
+
+function loadSettings() {
+
+
+    const savedTheme =
+        localStorage.getItem(
+            "theme"
+        );
+
+
+    const savedAccent =
+        localStorage.getItem(
+            "accent"
+        );
+
+
+    if (
+        savedTheme
+    ) {
+
+
+        setTheme(
+            savedTheme
+        );
+
+    }
+
+
+    else {
+
+
+        setTheme(
+            "light"
+        );
+
+    }
+
+
+    if (
+        savedAccent
+    ) {
+
+
+        setAccent(
+            savedAccent
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   START WEBSITE
+========================================================= */
+
+document.getElementById(
+    "hostName"
+).textContent =
+    hostedBy;
+
+
+loadGames();
+
+
+loadSettings();
+
+
+</script>
+
 
 </body>
 </html>
